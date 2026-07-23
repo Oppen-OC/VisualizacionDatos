@@ -209,8 +209,9 @@ en escalas distintas.
 ## Fase 6 — Documentación y entregables
 **19 – 23 de julio**
 
-- `guion.md` — guion de la presentación (~3 min), ajustado a 532 palabras tras cronometrar.
-  Incluye la corrección del hallazgo erróneo y la nueva sección.
+- Guion de la presentación oral (~3 min, 532 palabras tras cronometrar), con la corrección del
+  hallazgo erróneo y la nueva sección. Se elabora para la defensa y no forma parte de los
+  entregables del repositorio.
 - `README.md` — instrucciones de instalación y ejecución.
 - `notebooks/03_hosts_profesionales.ipynb` — documentación reproducible del hallazgo final.
 - `bitacora.md` — este documento.
@@ -242,7 +243,6 @@ en escalas distintas.
 
 ```
 app.py                              Dashboard (5 pestañas)
-guion.md                            Guion de presentación (~3 min)
 bitacora.md                         Este documento
 README.md                           Instalación y ejecución
 requirements.txt                    Dependencias

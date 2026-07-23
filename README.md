@@ -49,7 +49,6 @@ lateral (barrio, tipo de alojamiento, tipo de anfitrión) para explorar los dato
 ```
 app.py                           Dashboard de Streamlit
 requirements.txt                 Dependencias
-guion.md                         Guion de la presentación (~3 min)
 bitacora.md                      Bitácora: fases, decisiones e iteraciones
 data/
   dashboard/                     Datos pre-agregados que carga la app (~2 MB)
