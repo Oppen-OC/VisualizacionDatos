@@ -37,7 +37,7 @@ Decisiones de limpieza, cada una con su justificación:
 | Problema detectado | Decisión | Razón |
 |---|---|---|
 | `price` venía como texto (`"$1,234.00"`) | Conversión a numérico | Imposible operar de otro modo |
-| **15,5%** de anuncios sin precio (3.538) | **No imputar**; excluir de los análisis de precio | La ausencia **no es aleatoria**: son anuncios inactivos (3,1 reseñas/año de media frente a 18,8; 26 días disponibles frente a 222). Imputar habría inventado un mercado que no existe |
+| **15,5%** de anuncios sin precio (3.538 de 22.835 en el fichero resumen; 3.536 de 22.708 en el de detalle, que es el que usa el análisis) | **No imputar**; excluir de los análisis de precio | La ausencia **no es aleatoria**: son anuncios inactivos (3,1 reseñas/año de media frente a 18,8; 26 días disponibles frente a 222). Imputar habría inventado un mercado que no existe |
 | **11.070** filas duplicadas en `reviews` por (anuncio, fecha) | **No deduplicar** | Verificado contra `reviews_full`: mismo nº de filas y **0 ids de reseña repetidos**. Son reseñas distintas de dos huéspedes el mismo día. Deduplicar habría infracontado la demanda |
 | Outliers de precio hasta 36.883 €/noche | Recorte del 1% superior sólo en análisis de precio | Distorsionaban medias y escalas de los gráficos |
 | 12 columnas de metadatos de host completamente vacías | Eliminadas | Sin información |
@@ -113,22 +113,33 @@ patrones de esquiva regulatoria.
 
 ### Iteración 5.1 — Corrección de un error del dashboard
 
-Al reexaminar la relación precio-rating con r² se detectó una **inconsistencia entre el
-notebook y el dashboard**:
+Al reexaminar la relación precio-rating con r² se detectó que el propio notebook 02 se
+**contradecía a sí mismo**, y que el error se había propagado al dashboard:
 
-- El notebook 02 ya decía, correctamente: *"los ratings apenas correlacionan (r ≈ 0,09):
-  pagar más no compra una experiencia mejor valorada"*.
-- El dashboard, en cambio, afirmaba lo contrario en un recuadro destacado: *"se paga la
-  calidad, incluso en calidad-precio"*, apoyado en un gráfico de cuartiles con el eje Y
-  recortado que agrandaba visualmente una diferencia de 0,1 puntos.
+- En su sección 1, el notebook 02 concluía correctamente: *"los ratings apenas correlacionan
+  (r ≈ 0,09): pagar más no compra una experiencia mejor valorada"*.
+- Pero en su sección 4, al mirar el detalle por cuartiles, lo presentaba como *"hallazgo
+  contraintuitivo"*: *"no existe el efecto caro = clavada"*, y lo proponía como **tarjeta de
+  dato sorpresa** para el dashboard.
+- El dashboard heredó esa propuesta en un recuadro destacado, apoyado en un gráfico de
+  cuartiles con el eje Y recortado (4,35–4,85) que agrandaba visualmente una diferencia de
+  ~0,1 puntos sobre 5.
+
+El fallo de origen fue **leer un gradiente sin medir su magnitud**: las medias por cuartil
+subían, pero nunca se comprobó cuánta varianza explicaban.
 
 **Verificación:** el precio explica el **0,83%** de la varianza del rating. El efecto es
 real —sobrevive al control por barrio y tipo (r pasa de +0,091 a +0,096)— pero
 **prácticamente irrelevante**.
 
-**Corrección aplicada:** se sustituyó el recuadro y el gráfico por un **ranking de tamaños de
-efecto** que muestra qué explica realmente la nota. También se corrigió el guion de la
-presentación, que repetía la afirmación errónea.
+**Corrección aplicada**, en las tres piezas afectadas:
+
+1. **Dashboard:** se sustituyó el recuadro y el gráfico de cuartiles por un **ranking de
+   tamaños de efecto** que muestra qué explica realmente la nota.
+2. **Notebook 02:** se añadió una **errata** en la sección 4 y se marcó la fila
+   correspondiente de la tabla de conclusiones. El análisis original se conserva sin
+   modificar, para que la revisión quede trazable.
+3. **Guion de la presentación:** se reescribió el pasaje que repetía la afirmación errónea.
 
 > **Aprendizaje:** un resultado estadísticamente significativo con n = 16.000 puede ser
 > irrelevante en magnitud. Y un eje truncado convierte una diferencia trivial en un titular.

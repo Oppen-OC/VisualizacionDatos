@@ -1,6 +1,7 @@
 # Análisis (notebooks)
 pandas>=3.0
 numpy>=2.0
+scipy>=1.17
 pyarrow>=25.0
 matplotlib>=3.11
 missingno>=0.5
