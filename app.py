@@ -116,7 +116,7 @@ def inyectar_estilo():
         font-family: {SANS}; font-size: 0.78rem; color: {MUTED}; margin: 0 0 0.25rem 0;
     }}
 
-    /* ---- callout "el dato que sorprende" ---- */
+    /* ---- callout destacado (premisa → evidencia → conclusión) ---- */
     .callout {{
         background: {SURFACE}; border: 1px solid {BASE}; border-top: 3px solid {BLUE};
         padding: 1.2rem 1.4rem; border-radius: 2px;

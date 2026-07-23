@@ -57,8 +57,8 @@ data/
   *.csv                          Datos crudos de Inside Airbnb
 notebooks/
   01_exploracion_limpieza.ipynb  Limpieza de datos
-  02_analisis_exploratorio.ipynb Análisis exploratorio y hallazgos
-  03_hosts_profesionales.ipynb   El hallazgo final: qué explica la nota
+  02_analisis_exploratorio.ipynb Exploración: precio, ubicación, demanda, anfitriones
+  03_hosts_profesionales.ipynb   Tamaños de efecto sobre la valoración
 scripts/
   prepare_dashboard_data.py      Pre-agrega processed/ -> dashboard/
 ```
