@@ -1,0 +1,25 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Editor
+.vscode/
+.idea/
+
+# Datos: se ignora todo salvo los ficheros ligeros que consume el dashboard
+data/*
+!data/dashboard/
+data/dashboard/*
+!data/dashboard/*.parquet
+!data/dashboard/*.geojson
+
+# Sistema
+.DS_Store
+Thumbs.db

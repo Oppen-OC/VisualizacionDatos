@@ -1,0 +1,11 @@
+# Análisis (notebooks)
+pandas>=3.0
+numpy>=2.0
+pyarrow>=25.0
+matplotlib>=3.11
+missingno>=0.5
+jupyter
+
+# Dashboard
+streamlit>=1.59
+plotly>=6.9
