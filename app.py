@@ -129,6 +129,9 @@ def inyectar_estilo():
         font-family: {SERIF}; font-size: 1.12rem; line-height: 1.5; color: {INK};
         margin: 0;
     }}
+    /* callouts que encadenan varios párrafos (premisa → evidencia → conclusión) */
+    .callout p + p {{ margin-top: 0.72rem; }}
+    .callout p b:first-child {{ color: {BLUE_D}; }}
 
     /* ---- pestañas como navegación de secciones ---- */
     .stTabs [data-baseweb="tab-list"] {{
@@ -441,15 +444,18 @@ with tab_precio:
 
     st.markdown('<hr class="rule-thin">', unsafe_allow_html=True)
 
-    # --- corrección del hallazgo «obvio» precio↔rating ---
+    # --- precio↔rating: la intuición puesta a prueba ---
     c3, c4 = st.columns([1, 1.15])
     c3.markdown(
-        '<div class="callout"><div class="k">El dato «obvio», corregido</div>'
-        '<p>El titular fácil —<i>«se paga la calidad»</i>— no se sostiene. El precio '
-        'explica <b>menos del 1%</b> de la variación en las reseñas: el efecto existe y '
-        'aguanta al comparar pisos del mismo barrio y tipo, pero es <b>diminuto</b>, y un '
-        'eje recortado lo hacía parecer grande. Lo que de verdad predice una buena nota no '
-        'es cuánto cuesta, sino <b>quién</b> lo gestiona.</p></div>',
+        '<div class="callout"><div class="k">La intuición, a prueba</div>'
+        '<p><b>Lo que se presume:</b> que pagar más compra una estancia mejor. Si fuera '
+        'cierto, el precio debería predecir la valoración de los huéspedes.</p>'
+        '<p><b>Lo que dicen los datos:</b> casi nada. El precio explica <b>menos del 1%</b> '
+        'de la variación en las notas. El efecto existe —y se mantiene al comparar pisos '
+        'del mismo barrio y tipo— pero es <b>diminuto</b>.</p>'
+        '<p><b>Lo que sí la predice:</b> no cuánto cuesta el alojamiento, sino <b>quién lo '
+        'gestiona</b>. En el gráfico contiguo, los dos factores que más pesan son del '
+        'anfitrión. La sección <i>Hosts profesionales</i> desarrolla por qué.</p></div>',
         unsafe_allow_html=True)
     if len(fp) >= 200:
         aux = fp.assign(

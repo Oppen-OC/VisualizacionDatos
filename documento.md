@@ -207,29 +207,47 @@ en responder deja de ser una herramienta de exploración.
 
 ## 5. Mockup
 
-Boceto del diseño realizado a mano sobre papel, previo a la implementación.
+Boceto del diseño realizado a mano sobre papel, previo a la implementación:
+**[`mockup.pdf`](mockup.pdf)** — una página por sección.
 
-> **[Insertar aquí la fotografía o el escaneo del boceto]**
+El boceto es deliberadamente poco detallado: no fija estilos ni colores, sino **qué
+información mostrar, qué espacio ocupa cada bloque** y, al pie de cada página, anotaciones
+sueltas con dudas y cosas a comprobar. Esas anotaciones acabaron dirigiendo buena parte del
+desarrollo.
+
+| Página | Sección esbozada | Bloques previstos |
+|---|---|---|
+| 1 | Mapa | Mapa de Madrid con `geojson`, filtros y métricas de cabecera |
+| 2 | Influencias sobre el precio | Correlación de variables con precio · precio por tipo · precio por distancia · correlación calidad-precio |
+| 3 | Demanda | Histórico de reseñas por año · meses de más y menos demanda · demanda en un año |
+| 4 | Ofertadores de piso | Nº de anuncios · disponibilidad · media de rating · Superhost frente al resto · declaración por zona |
+| 5 | Host profesionales | Calidad del piso frente a nº de anuncios · influencia del Superhost en el precio |
 
 ### Del boceto a la implementación
 
-> ⚠️ **REVISAR ANTES DE ENTREGAR — y borrar este aviso.** Este apartado está redactado a
-> partir del dashboard final, no del boceto. Ajustá la tabla de cambios a lo que realmente
-> dibujaste: si el boceto ya incluía cinco secciones, o si los KPIs iban en línea desde el
-> principio, esas filas sobran. Es el apartado que conecta con la parte del vídeo sobre "cómo
-> habéis llegado a la implementación desde el diseño", así que conviene que sea fiel.
+La **arquitectura se mantuvo intacta**: las cinco secciones del boceto son las cinco pestañas
+finales, en el mismo orden. También sobrevivió sin cambios la fila de tres gráficos de
+"Ofertadores de piso" (nº de anuncios · disponibilidad · rating), que comparten eje para poder
+compararse.
 
-La estructura general del boceto se mantuvo: cabecera con las cifras de contexto, navegación
-por secciones temáticas y el mapa como pieza de entrada.
+Lo que cambió, y por qué:
 
-Los cambios introducidos durante el desarrollo, y su motivo:
+| Del boceto | En la implementación | Motivo |
+|---|---|---|
+| "Ventanas con progreso que muestren un **flujo** de los hallazgos" | Cinco pestañas en orden narrativo, cada una abierta por un titular afirmativo | La idea de flujo se conservó; las "ventanas con progreso" habrían añadido navegación sin aportar información |
+| Anotación: *"las métricas de arriba son MUY importantes, deberían ser globales"* | Línea de sumario en la cabecera y **cuatro filtros que afectan a las cinco pestañas** | La anotación se cumplió literalmente: es el origen de los filtros globales |
+| Anotación: *"falta añadir algo aparte del mapa"* | Tablas con los cinco barrios extremos bajo el mapa | El mapa responde "dónde", pero no da los valores concretos |
+| "Histograma vertical" + *"¿puedo meter algo más bonito que un histograma?"* | Barras **horizontales** ordenadas, con etiquetas directas | Los nombres de las variables son largos: en horizontal se leen sin girar la cabeza |
+| "Correlación entre calidad y precio", anotada como *"esperable"* | Bloque **"La intuición, a prueba"** + ranking de factores por varianza explicada | Al medir el tamaño del efecto, la correlación *esperable* resultó explicar **menos del 1 %**. El bloque pasó de mostrar una relación a **contrastar una hipótesis** |
+| "Usar gráficas de puntos" en demanda | Serie con área y barras des-tendenciadas | Los puntos no transmiten continuidad temporal; el área sí, y el desplome de 2020 se lee mejor |
+| "Histograma de declaración de piso por zona" + *"usar algo que no sea un histograma"* | Barras horizontales por distrito, con línea de media | Permite ordenar los distritos y situarlos respecto al promedio |
+| "Influencia del Superhost en el precio", en la última sección | Trasladado a **"Quién manda"** | Agrupar todo lo relativo al distintivo Superhost en una sola sección |
+| "Comparativa de calidad del piso y nº de anuncios" | ***Slope chart*** de las subnotas por tamaño de anfitrión | El boceto pedía el *efecto*; el gráfico final muestra además el **mecanismo**: qué aspectos concretos se degradan y cuál no |
 
-| Cambio | Motivo |
-|---|---|
-| Cuatro secciones → **cinco** | El hallazgo sobre anfitriones profesionales resultó ser el más relevante y exigía espacio propio |
-| Tarjeta de "dato sorpresa" en la sección de precio → **ranking de factores** | El hallazgo previsto no resistió el análisis: el precio explica menos del 1 % de la valoración |
-| KPIs en tarjetas → **línea de sumario** | Las tarjetas fragmentaban visualmente la cabecera; una línea continua con separadores finos resulta más legible |
-| Ejes con valores → **etiquetas directas** | Menos elementos que leer para la misma información |
+La anotación más certera es la de la página 5: *"¿esto contradice lo de antes?"*. Sí lo hacía.
+La contradicción entre la correlación "esperable" de la página 2 y los hallazgos sobre
+anfitriones profesionales de la página 5 resultó ser **el hallazgo principal del trabajo**, y
+obligó a rehacer el bloque de precio.
 
 ---
 

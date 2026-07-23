@@ -20,6 +20,9 @@ data/dashboard/*
 !data/dashboard/*.parquet
 !data/dashboard/*.geojson
 
+# Guion de la defensa oral: material de trabajo, fuera de la entrega
+guion.md
+
 # Sistema
 .DS_Store
 Thumbs.db
