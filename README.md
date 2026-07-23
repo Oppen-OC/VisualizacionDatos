@@ -49,6 +49,7 @@ lateral (barrio, tipo de alojamiento, tipo de anfitrión) para explorar los dato
 ```
 app.py                           Dashboard de Streamlit
 requirements.txt                 Dependencias
+documento.md                     Documento de diseño: problema, usuarios, objetivos, datos
 bitacora.md                      Bitácora: fases, decisiones e iteraciones
 data/
   dashboard/                     Datos pre-agregados que carga la app (~2 MB)
@@ -66,6 +67,15 @@ scripts/
 
 La app solo lee `data/dashboard/` (ya generado), así que **no necesita** los CSV
 crudos ni recalcular nada para funcionar.
+
+`data/processed/` contiene los Parquet ya limpios que consumen los notebooks 02 y 03.
+Se incluyen en la entrega comprimida, pero **no en el repositorio**: superan el límite
+de tamaño de GitHub. Con ellos presentes, ambos notebooks se pueden reejecutar de
+principio a fin.
+
+El notebook 01 (limpieza) parte de los CSV originales, que no se distribuyen por su
+tamaño (~750 MB); son descargables en [Inside Airbnb](http://insideairbnb.com/). El
+notebook conserva sus salidas, así que puede leerse sin reejecutarlo.
 
 Para regenerar los datos del dashboard desde los Parquet procesados (opcional):
 
