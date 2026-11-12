@@ -96,8 +96,8 @@ conocer los límites del dato mientras lo mira.
 
 **Origen.** [Inside Airbnb](http://insideairbnb.com/), proyecto independiente y sin ánimo de
 lucro que extrae y publica información pública de los anuncios reales de la plataforma, ciudad
-por ciudad, para permitir el estudio del impacto del alquiler turístico. Datos de dominio
-público. Extracción utilizada: **Madrid, junio de 2026**.
+por ciudad, para permitir el estudio del impacto del alquiler turístico. Datos publicados con
+licencia CC BY 4.0. Extracción utilizada: **Madrid, junio de 2026**.
 
 | Fichero | Volumen | Contenido |
 |---|---|---|
