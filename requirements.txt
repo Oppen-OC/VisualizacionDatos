@@ -1,12 +1,13 @@
+# Dashboard: versiones exactas probadas. Streamlit cambia su HTML entre versiones
+# y el CSS de app.py depende de él (p. ej. las pestañas pasaron de BaseWeb a react-aria).
+streamlit==1.67.0
+plotly==7.1.0
+pandas==3.1.1
+numpy==2.4.6
+pyarrow==26.0.1
+
 # Análisis (notebooks)
-pandas>=3.0
-numpy>=2.0
 scipy>=1.17
-pyarrow>=25.0
 matplotlib>=3.11
 missingno>=0.5
 jupyter
-
-# Dashboard
-streamlit>=1.59
-plotly>=6.9

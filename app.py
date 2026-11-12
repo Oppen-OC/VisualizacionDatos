@@ -133,18 +133,19 @@ def inyectar_estilo():
     .callout p + p {{ margin-top: 0.72rem; }}
     .callout p b:first-child {{ color: {BLUE_D}; }}
 
-    /* ---- pestañas como navegación de secciones ---- */
-    .stTabs [data-baseweb="tab-list"] {{
-        gap: 2rem; border-bottom: 1px solid {BASE}; margin-bottom: 1.4rem;
-    }}
-    .stTabs [data-baseweb="tab"] {{
+    /* ---- pestañas como navegación de secciones ----
+       Streamlit >= 1.6x pinta las pestañas con react-aria: se seleccionan por rol ARIA
+       (estable entre versiones). El texto vive en un <p> hijo, que la regla base pondría
+       en tinta; por eso el color y la tipografía se fijan también en [role=tab] p. */
+    .stTabs [role="tablist"] {{ gap: 2rem; margin-bottom: 1.4rem; }}
+    .stTabs [role="tablist"]::after {{ background: {BASE}; height: 1px; }}
+    .stTabs [role="tab"], .stTabs [role="tab"] p {{
         font-family: {SANS}; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em;
-        text-transform: uppercase; color: {MUTED}; padding: 0.2rem 0 0.7rem 0;
-        background: transparent;
+        text-transform: uppercase; color: {MUTED}; background: transparent;
     }}
-    .stTabs [aria-selected="true"] {{ color: {INK} !important; }}
-    .stTabs [data-baseweb="tab-highlight"] {{ background: {INK}; height: 2px; }}
-    .stTabs [data-baseweb="tab-border"] {{ background: transparent; }}
+    .stTabs [role="tab"][aria-selected="true"],
+    .stTabs [role="tab"][aria-selected="true"] p {{ color: {INK}; }}
+    .stTabs .react-aria-SelectionIndicator {{ background: {INK}; height: 2px; }}
 
     /* ---- sidebar ---- */
     [data-testid="stSidebar"] {{ background: {PAPER}; border-right: 1px solid {BASE}; }}
@@ -532,15 +533,14 @@ with tab_demanda:
         fig = go.Figure(go.Bar(
             x=MESES, y=perfil.values, marker_color=colores, width=0.62,
             hovertemplate='%{x}: %{y:.1f}% del año<extra></extra>'))
-        fig.add_hline(y=100 / 12, line_dash='dot', line_color=MUTED, line_width=1,
-                      annotation_text='reparto uniforme (8,3%)',
-                      annotation_font=dict(family=SANS, color=MUTED, size=11))
+        # sin etiqueta dentro del gráfico: según el ancho pisaba las barras; va en el subtítulo
+        fig.add_hline(y=100 / 12, line_dash='dot', line_color=MUTED, line_width=1)
         fig.update_yaxes(title='% de las reseñas del año', ticksuffix='%')
         base_layout(fig, 360)
         lineas(fig)
         fig.update_xaxes(tickfont=dict(color=INK2, size=11.5))
         titulo_grafico(c1, 'Octubre manda; agosto se hunde',
-                       'media 2015–2025, corregida de la tendencia de crecimiento')
+                       'media 2015–2025 des-tendenciada · punteado: reparto uniforme (8,3%)')
         c1.plotly_chart(fig, width='stretch')
         nota('Perfil <b>des-tendenciado</b> (el % del año que cae en cada mes, promediado '
              'entre años): Madrid es destino urbano —pico en otoño, valle en pleno verano—, '
@@ -693,22 +693,31 @@ with tab_pro:
         d_ppp = gg.precio_pp[a1] - gg.precio_pp[a0]
         share_pro = (fh.tipo_host == '21+').mean() * 100
 
+        # etiquetas cortas: con las largas la línea no cabía en una fila (<1000 px);
+        # el tramo comparado va en la nota bajo cada cifra
+        tramo = f'<div class="stat-note">{a0} → {a1}</div>'
         st.markdown(
             '<div class="statstrip">'
-            f'<div class="stat"><div class="stat-label">Oferta de grandes gestores (21+)</div>'
+            f'<div class="stat"><div class="stat-label">Oferta de gestores 21+</div>'
             f'<div class="stat-num">{share_pro:.0f}<small> %</small></div></div>'
-            f'<div class="stat"><div class="stat-label">Nota · particular → 21+</div>'
-            f'<div class="stat-num">{coma(d_rating)}<small> pts</small></div></div>'
-            f'<div class="stat"><div class="stat-label">Calidad-precio · mismo tramo</div>'
-            f'<div class="stat-num">{coma(d_valor)}<small> pts</small></div></div>'
+            f'<div class="stat"><div class="stat-label">Nota global</div>'
+            f'<div class="stat-num">{coma(d_rating)}<small> pts</small></div>{tramo}</div>'
+            f'<div class="stat"><div class="stat-label">Nota calidad-precio</div>'
+            f'<div class="stat-num">{coma(d_valor)}<small> pts</small></div>{tramo}</div>'
             f'<div class="stat"><div class="stat-label">Precio por persona</div>'
-            f'<div class="stat-num">{d_ppp:+.0f}<small> €</small></div></div>'
+            f'<div class="stat-num">{d_ppp:+.0f}<small> €</small></div>{tramo}</div>'
             '</div><hr class="rule-thin">',
             unsafe_allow_html=True)
 
         c1, c2 = st.columns([1.35, 1])
 
         # --- slope chart: dónde se rompe la calidad al escalar ---
+        # etiquetas al final de cada línea; si dos finales casi coinciden se separan
+        # hacia abajo (0,03 pts ≈ 18 px con range [4.4, 4.95] y 360 px de alto)
+        y_etq, suelo = {}, np.inf
+        for k in sorted(SUB, key=lambda k: -gg[k].iloc[-1]):
+            y_etq[k] = suelo = min(gg[k].iloc[-1], suelo - 0.03)
+
         fig = go.Figure()
         for k, (col, lab, color, ancho) in SUB.items():
             y = gg[k]
@@ -716,7 +725,7 @@ with tab_pro:
                 x=cats, y=y.values, mode='lines+markers',
                 line=dict(color=color, width=ancho), marker=dict(size=7),
                 hovertemplate=f'{lab} · %{{x}}: %{{y:.2f}}<extra></extra>')
-            fig.add_annotation(x=cats[-1], y=y.iloc[-1], text=lab, xanchor='left',
+            fig.add_annotation(x=cats[-1], y=y_etq[k], text=lab, xanchor='left',
                                xshift=12, showarrow=False,
                                font=dict(family=SANS, color=color, size=12))
         fig.update_yaxes(title='puntuación media (1–5)', range=[4.4, 4.95])
